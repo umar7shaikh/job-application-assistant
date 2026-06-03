@@ -9,10 +9,12 @@ export function JobIntake({
   apifyConnected,
   rapidapiConnected,
   keywordSuggestions,
+  resumeLocation,
 }: {
   apifyConnected: boolean;
   rapidapiConnected: boolean;
   keywordSuggestions: string[];
+  resumeLocation: string;
 }) {
   const [tab, setTab] = useState<"search" | "paste">("search");
 
@@ -47,6 +49,7 @@ export function JobIntake({
           apifyConnected={apifyConnected}
           rapidapiConnected={rapidapiConnected}
           keywordSuggestions={keywordSuggestions}
+          resumeLocation={resumeLocation}
         />
       ) : (
         <PasteJobForm />

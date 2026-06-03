@@ -74,6 +74,7 @@ export default async function JobsPage() {
     .limit(1);
 
   const keywordSuggestions = profile ? keywordsFromProfile(profile.data) : [];
+  const resumeLocation = (profile?.data?.contact?.location ?? "").trim();
 
   const scores = new Map<string, number>();
   if (profile) {
@@ -113,6 +114,7 @@ export default async function JobsPage() {
             apifyConnected={Boolean(secrets?.apifyKeyEnc)}
             rapidapiConnected={Boolean(secrets?.rapidapiKeyEnc)}
             keywordSuggestions={keywordSuggestions}
+            resumeLocation={resumeLocation}
           />
 
           {runs.length > 0 ? (

@@ -18,14 +18,30 @@ function parseList(s: string): string[] {
     .filter(Boolean);
 }
 
+function dedupeCI(items: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of items) {
+    const v = raw.trim();
+    if (!v) continue;
+    const low = v.toLowerCase();
+    if (seen.has(low)) continue;
+    seen.add(low);
+    out.push(v);
+  }
+  return out;
+}
+
 export function ScrapeForm({
   apifyConnected,
   rapidapiConnected,
   keywordSuggestions,
+  resumeLocation,
 }: {
   apifyConnected: boolean;
   rapidapiConnected: boolean;
   keywordSuggestions: string[];
+  resumeLocation: string;
 }) {
   const [state, action] = useActionState<ScrapeState, FormData>(
     runScrape,
@@ -47,6 +63,12 @@ export function ScrapeForm({
       ).join(", ")
     );
   };
+
+  // Location is a single value — chips set/clear it.
+  const [location, setLocation] = useState("");
+  const locationChips = dedupeCI([resumeLocation, "Remote"]);
+  const setLoc = (c: string) =>
+    setLocation(location.trim().toLowerCase() === c.toLowerCase() ? "" : c);
   // Friendly preset → Apify actor id. "custom" reveals a free-text field.
   const [actor, setActor] = useState<string>(
     "curious_coder/linkedin-jobs-scraper"
@@ -97,9 +119,20 @@ export function ScrapeForm({
           </label>
           {keywordSuggestions.length > 0 ? (
             <div className="mt-2">
-              <p className="mb-1.5 text-[11px] font-extrabold uppercase tracking-wide text-ink/45">
-                From your résumé — tap to add
-              </p>
+              <div className="mb-1.5 flex items-center justify-between">
+                <p className="text-[11px] font-extrabold uppercase tracking-wide text-ink/45">
+                  From your résumé — tap to add
+                </p>
+                {keywords ? (
+                  <button
+                    type="button"
+                    onClick={() => setKeywords("")}
+                    className="text-[11px] font-extrabold uppercase tracking-wide text-pop-red hover:underline"
+                  >
+                    ✕ Clear
+                  </button>
+                ) : null}
+              </div>
               <div className="flex flex-wrap gap-1.5">
                 {keywordSuggestions.map((k) => {
                   const on = selected.has(k.toLowerCase());
@@ -121,7 +154,38 @@ export function ScrapeForm({
             </div>
           ) : null}
         </div>
-        <TextField label="Location" name="location" placeholder="Remote, Bangalore…" />
+        <div>
+          <label className="block">
+            <span className="c-label">Location</span>
+            <input
+              name="location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Remote, Bangalore…"
+              className="c-field"
+            />
+          </label>
+          {locationChips.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {locationChips.map((c) => {
+                const on = location.trim().toLowerCase() === c.toLowerCase();
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setLoc(c)}
+                    className={`rounded-full border-2 border-ink px-2.5 py-1 text-xs font-bold transition-transform hover:-translate-y-0.5 ${
+                      on ? "bg-pop-green text-white" : "bg-white text-ink/70"
+                    }`}
+                  >
+                    {on ? "✓ " : "+ "}
+                    {c}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <div className="mt-4">
