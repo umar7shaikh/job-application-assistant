@@ -38,7 +38,12 @@ export default async function ResumesPage() {
         <UploadForm hasAi={Boolean(secrets?.aiKeyEnc)} />
       </div>
 
-      {profiles.length > 0 ? (
+      {profiles.length === 0 ? (
+        <p className="mt-8 rounded-2xl border-[2.5px] border-dashed border-ink/40 bg-white px-6 py-10 text-center text-sm font-medium text-ink/60">
+          No résumés yet — upload or paste one above and we&rsquo;ll turn it into
+          an editable profile.
+        </p>
+      ) : (
         <ul className="mt-8 space-y-3">
           {profiles.map((p) => {
             const roles = p.data.experience?.length ?? 0;
@@ -88,7 +93,7 @@ export default async function ResumesPage() {
             );
           })}
         </ul>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -118,22 +118,29 @@ export default async function JobsPage() {
           />
 
           {runs.length > 0 ? (
-            <div className="flex flex-wrap gap-2 text-xs">
-              {runs.map((r) => (
-                <span
-                  key={r.id}
-                  className="rounded-full border-2 border-ink bg-white px-3 py-1 font-semibold text-ink/70"
-                >
-                  {r.source} ·{" "}
-                  <span className={statusColor[r.status] ?? "text-ink-soft"}>
-                    {r.status}
+            <div className="space-y-2">
+              <div className="flex flex-wrap gap-2 text-xs">
+                {runs.map((r) => (
+                  <span
+                    key={r.id}
+                    className="rounded-full border-2 border-ink bg-white px-3 py-1 font-semibold text-ink/70"
+                  >
+                    {r.source} ·{" "}
+                    <span className={statusColor[r.status] ?? "text-ink-soft"}>
+                      {r.status}
+                    </span>
+                    {r.status === "succeeded" ? ` · ${r.jobCount} new` : ""}
+                    {r.status === "failed" && r.error
+                      ? ` · ${r.error.slice(0, 40)}`
+                      : ""}
                   </span>
-                  {r.status === "succeeded" ? ` · ${r.jobCount} new` : ""}
-                  {r.status === "failed" && r.error
-                    ? ` · ${r.error.slice(0, 40)}`
-                    : ""}
-                </span>
-              ))}
+                ))}
+              </div>
+              {runs.some((r) => r.status === "running" || r.status === "pending") ? (
+                <p className="text-xs text-ink-faint">
+                  A scrape is running — refresh in a bit to see new jobs.
+                </p>
+              ) : null}
             </div>
           ) : null}
         </div>

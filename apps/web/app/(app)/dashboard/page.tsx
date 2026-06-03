@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { eq } from "drizzle-orm";
-import { db, userSecrets, masterProfiles, jobs, applications } from "@builder/db";
+import { eq, count } from "drizzle-orm";
+import {
+  db,
+  userSecrets,
+  masterProfiles,
+  jobs,
+  jobMatches,
+  applications,
+} from "@builder/db";
 import { requireUser } from "@/lib/dal";
 
 export const metadata: Metadata = { title: "Dashboard · Lever" };
@@ -48,6 +55,46 @@ export default async function DashboardPage() {
     .where(eq(applications.userId, user.id))
     .limit(1);
   const hasApplication = Boolean(appRow);
+
+  // At-a-glance stats, all scoped to the current user.
+  const [[{ value: jobsCount }], [{ value: applicationsCount }], [{ value: resumesCount }]] =
+    await Promise.all([
+      db.select({ value: count() }).from(jobs).where(eq(jobs.userId, user.id)),
+      db
+        .select({ value: count() })
+        .from(applications)
+        .where(eq(applications.userId, user.id)),
+      db
+        .select({ value: count() })
+        .from(masterProfiles)
+        .where(eq(masterProfiles.userId, user.id)),
+    ]);
+
+  const fitRows = await db
+    .select({ fit: jobMatches.fit })
+    .from(jobMatches)
+    .where(eq(jobMatches.userId, user.id));
+  const avgFit =
+    fitRows.length > 0
+      ? Math.round(
+          fitRows.reduce((sum, row) => sum + row.fit.score, 0) / fitRows.length
+        )
+      : null;
+
+  const stats: { label: string; value: string; color: string }[] = [
+    { label: "Jobs saved", value: String(jobsCount), color: "text-ink" },
+    {
+      label: "Applications",
+      value: String(applicationsCount),
+      color: "text-pop-green",
+    },
+    {
+      label: "Avg fit",
+      value: avgFit === null ? "—" : String(avgFit),
+      color: "text-pop-blue",
+    },
+    { label: "Résumés", value: String(resumesCount), color: "text-pop-red" },
+  ];
 
   const steps: Step[] = [
     {
@@ -98,6 +145,21 @@ export default async function DashboardPage() {
         Your workspace for finding, tailoring, and applying to jobs — without
         the busywork. Here&rsquo;s how to get set up.
       </p>
+
+      <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {stats.map((stat) => (
+          <div key={stat.label} className="c-card p-5">
+            <div
+              className={`font-comic text-4xl tracking-wide tnum ${stat.color}`}
+            >
+              {stat.value}
+            </div>
+            <div className="mt-1 text-xs font-extrabold uppercase tracking-wide text-ink/60">
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
 
       <ol className="mt-10 grid gap-5 sm:grid-cols-2">
         {steps.map((step) => (

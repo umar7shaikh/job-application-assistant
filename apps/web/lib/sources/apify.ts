@@ -129,6 +129,121 @@ const ITEM_MAPPERS: Record<
   },
 };
 
+/**
+ * Normalize an actor id into Apify's API "tilde" form (username~actor), accepting
+ * either the console form (username/actor) or the API form. Throws if missing.
+ */
+export function resolveActorId(rawActorId?: string): string {
+  const actorId = rawActorId?.trim().replace(/\//g, "~");
+  if (!actorId) throw new SourceError("Choose an Apify actor to run.");
+  return actorId;
+}
+
+/**
+ * Build the actor input JSON from the friendly scrape params. Shared by the
+ * synchronous run and the async (webhook) run so both send identical input.
+ */
+export function buildApifyInput(
+  actorId: string,
+  params: ScrapeParams
+): Record<string, unknown> {
+  const preset = KNOWN_ACTORS[actorId];
+  return params.rawInput && Object.keys(params.rawInput).length > 0
+    ? // Power users: use their JSON exactly (actors validate their schema).
+      params.rawInput
+    : preset
+      ? // Known actor: build its input from the friendly fields — no JSON.
+        preset(params)
+      : {
+          // Common aliases across job-scraper actors (unknown keys are
+          // typically ignored; use raw JSON for strict-schema actors).
+          position: params.keywords,
+          query: params.keywords,
+          queries: params.keywords,
+          search: params.keywords,
+          location: params.location,
+          maxItems: params.maxItems,
+          maxResults: params.maxItems,
+          ...(params.experience
+            ? {
+                experience: params.experience,
+                experienceLevel: APIFY_EXPERIENCE[params.experience],
+              }
+            : {}),
+        };
+}
+
+/**
+ * Map raw Apify dataset items into our JobPosting shape, applying any
+ * actor-specific item mapper first. Shared by the sync path and the webhook.
+ */
+export function mapApifyItems(actorId: string, items: unknown): JobPosting[] {
+  if (!Array.isArray(items)) return [];
+  const mapper = ITEM_MAPPERS[actorId];
+  return items
+    .map((it) => {
+      const raw = it as Record<string, unknown>;
+      return normalizeJob(mapper ? mapper(raw) : raw, "apify");
+    })
+    .filter((j): j is JobPosting => j !== null);
+}
+
+/**
+ * Start an Apify actor run asynchronously, registering a completion webhook so
+ * results are collected later (avoids serverless time limits on large runs).
+ * Returns the started run's id (store as scrapeRun.apifyRunId).
+ */
+export async function startApifyRunAsync(
+  token: string,
+  actorId: string,
+  input: Record<string, unknown>,
+  webhookUrl: string
+): Promise<string> {
+  const webhooks = Buffer.from(
+    JSON.stringify([
+      {
+        eventTypes: [
+          "ACTOR.RUN.SUCCEEDED",
+          "ACTOR.RUN.FAILED",
+          "ACTOR.RUN.ABORTED",
+          "ACTOR.RUN.TIMED_OUT",
+        ],
+        requestUrl: webhookUrl,
+      },
+    ]),
+    "utf8"
+  ).toString("base64");
+
+  const res = await fetch(
+    `https://api.apify.com/v2/acts/${encodeURIComponent(
+      actorId
+    )}/runs?token=${encodeURIComponent(token)}&webhooks=${encodeURIComponent(
+      webhooks
+    )}`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(input),
+    }
+  );
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new SourceError(
+      `Apify run failed to start (${res.status}). ${detail.slice(0, 200)}`
+    );
+  }
+
+  const json = (await res.json().catch(() => null)) as {
+    data?: { id?: string };
+  } | null;
+  const runId = json?.data?.id;
+  if (!runId) {
+    throw new SourceError("Apify did not return a run id.");
+  }
+  return runId;
+}
+
 export const apifySource: JobSource = {
   id: "apify",
   label: "Apify",
@@ -137,34 +252,9 @@ export const apifySource: JobSource = {
   async scrape(creds: SourceCreds, params: ScrapeParams): Promise<JobPosting[]> {
     if (!creds.apifyToken) throw new SourceError("Missing Apify token.");
     // Accept either console form (username/actor) or API form (username~actor).
-    const actorId = params.actorId?.trim().replace(/\//g, "~");
-    if (!actorId) throw new SourceError("Choose an Apify actor to run.");
+    const actorId = resolveActorId(params.actorId);
 
-    const preset = KNOWN_ACTORS[actorId];
-    const input =
-      params.rawInput && Object.keys(params.rawInput).length > 0
-        ? // Power users: use their JSON exactly (actors validate their schema).
-          params.rawInput
-        : preset
-          ? // Known actor: build its input from the friendly fields — no JSON.
-            preset(params)
-          : {
-            // Common aliases across job-scraper actors (unknown keys are
-            // typically ignored; use raw JSON for strict-schema actors).
-            position: params.keywords,
-            query: params.keywords,
-            queries: params.keywords,
-            search: params.keywords,
-            location: params.location,
-            maxItems: params.maxItems,
-            maxResults: params.maxItems,
-            ...(params.experience
-              ? {
-                  experience: params.experience,
-                  experienceLevel: APIFY_EXPERIENCE[params.experience],
-                }
-              : {}),
-          };
+    const input = buildApifyInput(actorId, params);
 
     const res = await fetch(
       `https://api.apify.com/v2/acts/${encodeURIComponent(
@@ -188,13 +278,6 @@ export const apifySource: JobSource = {
     }
 
     const items = (await res.json()) as unknown;
-    if (!Array.isArray(items)) return [];
-    const mapper = ITEM_MAPPERS[actorId];
-    return items
-      .map((it) => {
-        const raw = it as Record<string, unknown>;
-        return normalizeJob(mapper ? mapper(raw) : raw, "apify");
-      })
-      .filter((j): j is JobPosting => j !== null);
+    return mapApifyItems(actorId, items);
   },
 };

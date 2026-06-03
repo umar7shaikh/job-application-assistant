@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import { runScrape, type ScrapeState } from "@/app/actions/jobs";
 // Import from the pure module (NOT the barrel) so this client component
@@ -74,6 +74,49 @@ export function ScrapeForm({
     "curious_coder/linkedin-jobs-scraper"
   );
 
+  // Search settings we remember across visits (persisted to localStorage).
+  const [experience, setExperience] = useState("");
+  const [datePosted, setDatePosted] = useState("");
+  const [maxItems, setMaxItems] = useState("25");
+
+  // Restore the last-used settings on mount (SSR-safe: effect only).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem("lever.scrapeSettings");
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        source?: "apify" | "jsearch";
+        actor?: string;
+        experience?: string;
+        datePosted?: string;
+        maxItems?: string;
+      };
+      if (saved.source === "apify" || saved.source === "jsearch") {
+        setSource(saved.source);
+      }
+      if (typeof saved.actor === "string") setActor(saved.actor);
+      if (typeof saved.experience === "string") setExperience(saved.experience);
+      if (typeof saved.datePosted === "string") setDatePosted(saved.datePosted);
+      if (typeof saved.maxItems === "string") setMaxItems(saved.maxItems);
+    } catch {
+      // Ignore malformed/unavailable storage — just use defaults.
+    }
+  }, []);
+
+  // Save whenever any remembered setting changes.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(
+        "lever.scrapeSettings",
+        JSON.stringify({ source, actor, experience, datePosted, maxItems })
+      );
+    } catch {
+      // Ignore storage write failures (e.g. private mode / quota).
+    }
+  }, [source, actor, experience, datePosted, maxItems]);
+
   const connected = source === "apify" ? apifyConnected : rapidapiConnected;
 
   return (
@@ -91,7 +134,16 @@ export function ScrapeForm({
             <option value="jsearch">JSearch (job API · free)</option>
           </select>
         </label>
-        <TextField label="Max results" name="maxItems" type="number" defaultValue="25" />
+        <label className="block">
+          <span className="c-label">Max results</span>
+          <input
+            name="maxItems"
+            type="number"
+            value={maxItems}
+            onChange={(e) => setMaxItems(e.target.value)}
+            className="c-field"
+          />
+        </label>
       </div>
 
       {!connected ? (
@@ -193,7 +245,12 @@ export function ScrapeForm({
           <span className="c-label">
             Experience level
           </span>
-          <select name="experience" defaultValue="" className={inputCls}>
+          <select
+            name="experience"
+            value={experience}
+            onChange={(e) => setExperience(e.target.value)}
+            className={inputCls}
+          >
             {experienceOptions.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
@@ -234,7 +291,12 @@ export function ScrapeForm({
                 <span className="c-label">
                   Date posted
                 </span>
-                <select name="datePosted" defaultValue="" className={inputCls}>
+                <select
+                  name="datePosted"
+                  value={datePosted}
+                  onChange={(e) => setDatePosted(e.target.value)}
+                  className={inputCls}
+                >
                   {datePostedOptions.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
@@ -299,6 +361,8 @@ export function ScrapeForm({
             <span className="text-accent">
               Found {state.found}, added {state.inserted} new.
             </span>
+          ) : state?.message ? (
+            <span className="font-semibold text-accent">{state.message}</span>
           ) : state?.error ? (
             <span className="text-danger">{state.error}</span>
           ) : (

@@ -12,9 +12,20 @@ import {
   type ExperienceLevel,
   type DatePosted,
 } from "@/lib/sources";
+import {
+  resolveActorId,
+  buildApifyInput,
+  startApifyRunAsync,
+} from "@/lib/sources/apify";
 
 export type ScrapeState =
-  | { ok?: boolean; error?: string; found?: number; inserted?: number }
+  | {
+      ok?: boolean;
+      error?: string;
+      found?: number;
+      inserted?: number;
+      message?: string;
+    }
   | undefined;
 
 export async function runScrape(
@@ -68,6 +79,61 @@ export async function runScrape(
       status: "running",
     })
     .returning({ id: scrapeRuns.id });
+
+  // Async path: Apify only, and only when a public URL + webhook secret are
+  // configured (i.e. deployed). Starts the run and returns immediately; the
+  // completion webhook collects results. Local dev (no APP_URL) falls through
+  // to the synchronous path below, unchanged.
+  const appUrl = process.env.APP_URL;
+  const webhookSecret = process.env.APIFY_WEBHOOK_SECRET;
+  if (source.id === "apify" && appUrl && webhookSecret) {
+    try {
+      const apifyActorId = resolveActorId(actorId);
+      const input = buildApifyInput(apifyActorId, {
+        keywords,
+        location,
+        maxItems,
+        experience,
+        datePosted,
+        searchUrls,
+        actorId,
+        rawInput,
+      });
+      const webhookUrl =
+        `${appUrl.replace(/\/$/, "")}/api/webhooks/apify` +
+        `?secret=${encodeURIComponent(webhookSecret)}` +
+        `&runRef=${encodeURIComponent(run.id)}`;
+      const apifyRunId = await startApifyRunAsync(
+        creds.apifyToken!,
+        apifyActorId,
+        input,
+        webhookUrl
+      );
+      await db
+        .update(scrapeRuns)
+        .set({ apifyRunId })
+        .where(eq(scrapeRuns.id, run.id));
+      revalidatePath("/jobs");
+      // Note: no `ok`/`found` here on purpose — the run hasn't finished, so the
+      // form shows its neutral hint rather than a misleading "added N". The
+      // scrape-run chip below the form flips to "running" → "succeeded".
+      return {
+        message: "Scrape started — jobs will appear when it finishes.",
+      };
+    } catch (err) {
+      const msg =
+        err instanceof SourceError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Could not start scrape.";
+      await db
+        .update(scrapeRuns)
+        .set({ status: "failed", error: msg, finishedAt: new Date() })
+        .where(eq(scrapeRuns.id, run.id));
+      return { error: msg };
+    }
+  }
 
   try {
     const postings = await source.scrape(creds, {
