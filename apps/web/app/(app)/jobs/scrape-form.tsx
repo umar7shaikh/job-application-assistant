@@ -11,12 +11,21 @@ import { SubmitButton } from "@/components/ui/submit-button";
 
 const inputCls = "c-field";
 
+function parseList(s: string): string[] {
+  return s
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
+}
+
 export function ScrapeForm({
   apifyConnected,
   rapidapiConnected,
+  keywordSuggestions,
 }: {
   apifyConnected: boolean;
   rapidapiConnected: boolean;
+  keywordSuggestions: string[];
 }) {
   const [state, action] = useActionState<ScrapeState, FormData>(
     runScrape,
@@ -25,6 +34,19 @@ export function ScrapeForm({
   const [source, setSource] = useState<"apify" | "jsearch">(
     rapidapiConnected && !apifyConnected ? "jsearch" : "apify"
   );
+  // Controlled so résumé chips can toggle keywords in/out of the field.
+  const [keywords, setKeywords] = useState("");
+  const selected = new Set(parseList(keywords).map((k) => k.toLowerCase()));
+  const toggleKeyword = (k: string) => {
+    const low = k.toLowerCase();
+    const list = parseList(keywords);
+    setKeywords(
+      (selected.has(low)
+        ? list.filter((x) => x.toLowerCase() !== low)
+        : [...list, k]
+      ).join(", ")
+    );
+  };
   // Friendly preset → Apify actor id. "custom" reveals a free-text field.
   const [actor, setActor] = useState<string>(
     "curious_coder/linkedin-jobs-scraper"
@@ -62,11 +84,43 @@ export function ScrapeForm({
       ) : null}
 
       <div className="mt-4 grid gap-4">
-        <TextField
-          label="Keywords"
-          name="keywords"
-          placeholder="Frontend engineer, React"
-        />
+        <div>
+          <label className="block">
+            <span className="c-label">Keywords</span>
+            <input
+              name="keywords"
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
+              placeholder="Frontend engineer, React"
+              className="c-field"
+            />
+          </label>
+          {keywordSuggestions.length > 0 ? (
+            <div className="mt-2">
+              <p className="mb-1.5 text-[11px] font-extrabold uppercase tracking-wide text-ink/45">
+                From your résumé — tap to add
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {keywordSuggestions.map((k) => {
+                  const on = selected.has(k.toLowerCase());
+                  return (
+                    <button
+                      key={k}
+                      type="button"
+                      onClick={() => toggleKeyword(k)}
+                      className={`rounded-full border-2 border-ink px-2.5 py-1 text-xs font-bold transition-transform hover:-translate-y-0.5 ${
+                        on ? "bg-pop-green text-white" : "bg-white text-ink/70"
+                      }`}
+                    >
+                      {on ? "✓ " : "+ "}
+                      {k}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
+        </div>
         <TextField label="Location" name="location" placeholder="Remote, Bangalore…" />
       </div>
 

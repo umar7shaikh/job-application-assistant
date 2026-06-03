@@ -8,9 +8,11 @@ import { PasteJobForm } from "./paste-job-form";
 export function JobIntake({
   apifyConnected,
   rapidapiConnected,
+  keywordSuggestions,
 }: {
   apifyConnected: boolean;
   rapidapiConnected: boolean;
+  keywordSuggestions: string[];
 }) {
   const [tab, setTab] = useState<"search" | "paste">("search");
 
@@ -44,6 +46,7 @@ export function JobIntake({
         <ScrapeForm
           apifyConnected={apifyConnected}
           rapidapiConnected={rapidapiConnected}
+          keywordSuggestions={keywordSuggestions}
         />
       ) : (
         <PasteJobForm />

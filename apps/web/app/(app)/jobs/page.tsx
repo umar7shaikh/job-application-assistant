@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { and, desc, eq } from "drizzle-orm";
 import { db, jobs, scrapeRuns, userSecrets, jobMatches, masterProfiles } from "@builder/db";
+import type { MasterProfile } from "@builder/shared";
 import { requireUser } from "@/lib/dal";
 import { deleteJob } from "@/app/actions/jobs";
 import { ScoreChip } from "@/components/fit-card";
@@ -9,6 +10,27 @@ import { JobIntake } from "./job-intake";
 import { ScoreAllButton } from "./score-all-button";
 
 export const metadata: Metadata = { title: "Jobs · Lever" };
+
+/** Tap-to-add keyword chips drawn from the user's default résumé. */
+function keywordsFromProfile(p: MasterProfile): string[] {
+  const raw = [
+    p.contact?.headline ?? "",
+    ...(p.experience ?? []).map((e) => e.title),
+    ...(p.skills ?? []).flatMap((g) => g.skills ?? []),
+  ];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of raw) {
+    const k = (item ?? "").trim();
+    if (!k || k.length > 32) continue;
+    const low = k.toLowerCase();
+    if (seen.has(low)) continue;
+    seen.add(low);
+    out.push(k);
+    if (out.length >= 16) break;
+  }
+  return out;
+}
 
 const statusColor: Record<string, string> = {
   succeeded: "text-accent",
@@ -45,11 +67,13 @@ export default async function JobsPage() {
 
   // Fit scores against the default resume (if any), for chips + ranking.
   const [profile] = await db
-    .select({ id: masterProfiles.id })
+    .select({ id: masterProfiles.id, data: masterProfiles.data })
     .from(masterProfiles)
     .where(eq(masterProfiles.userId, user.id))
     .orderBy(desc(masterProfiles.isDefault), desc(masterProfiles.updatedAt))
     .limit(1);
+
+  const keywordSuggestions = profile ? keywordsFromProfile(profile.data) : [];
 
   const scores = new Map<string, number>();
   if (profile) {
@@ -88,6 +112,7 @@ export default async function JobsPage() {
           <JobIntake
             apifyConnected={Boolean(secrets?.apifyKeyEnc)}
             rapidapiConnected={Boolean(secrets?.rapidapiKeyEnc)}
+            keywordSuggestions={keywordSuggestions}
           />
 
           {runs.length > 0 ? (
