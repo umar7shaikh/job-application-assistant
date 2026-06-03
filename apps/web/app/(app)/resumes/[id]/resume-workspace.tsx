@@ -94,7 +94,7 @@ export function ResumeWorkspace({
         </div>
 
         {/* Layout controls */}
-        <div className="mb-3 space-y-2 rounded-lg border border-line bg-surface p-3">
+        <div className="mb-3 space-y-2 rounded-lg border-2 border-ink bg-white p-3">
           <Control label="Style">
             <Segmented
               options={TEMPLATES.map((t) => ({ value: t.value, label: t.label }))}
@@ -136,7 +136,7 @@ export function ResumeWorkspace({
           key={`${layout.template}-${layout.accent}-${layout.pageTarget}-${version}`}
           src={src}
           title="Resume preview"
-          className="h-[74vh] w-full rounded-xl border border-line bg-surface"
+          className="h-[74vh] w-full rounded-xl border-[3px] border-ink bg-white"
         />
         <p className="mt-2 text-xs text-ink-faint">
           Preview updates instantly. Hit{" "}
@@ -173,16 +173,16 @@ function Segmented({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex overflow-hidden rounded-md border border-line-strong">
+    <div className="flex overflow-hidden rounded-lg border-2 border-ink">
       {options.map((o) => (
         <button
           key={o.value}
           type="button"
           onClick={() => onChange(o.value)}
-          className={`px-2.5 py-1 text-xs transition-colors ${
+          className={`px-2.5 py-1 text-xs font-bold transition-colors ${
             value === o.value
-              ? "bg-accent text-white"
-              : "bg-surface text-ink-soft hover:text-ink"
+              ? "bg-pop-green text-white"
+              : "bg-white text-ink/60 hover:text-ink"
           }`}
         >
           {o.label}

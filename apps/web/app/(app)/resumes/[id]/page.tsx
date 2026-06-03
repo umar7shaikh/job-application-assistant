@@ -38,7 +38,7 @@ export default async function ResumeDetailPage({
 
       <div className="mt-4 flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl tracking-tight text-ink">
+          <h1 className="font-comic text-4xl tracking-wide text-ink">
             Edit profile
           </h1>
           <p className="mt-1 text-sm text-ink-soft">
@@ -55,9 +55,7 @@ export default async function ResumeDetailPage({
               </button>
             </form>
           ) : (
-            <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-medium text-accent-strong">
-              Default
-            </span>
+            <span className="c-chip bg-pop-green text-white">Default</span>
           )}
           <form action={deleteResume}>
             <input type="hidden" name="id" value={profile.id} />

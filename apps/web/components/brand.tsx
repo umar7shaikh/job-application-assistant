@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** The wordmark. Serif, with a single emerald accent mark. */
+/** The wordmark — a comic-style ink-outlined badge. */
 export function Wordmark({
   className = "",
   href = "/",
@@ -9,11 +9,10 @@ export function Wordmark({
   href?: string;
 }) {
   return (
-    <Link
-      href={href}
-      className={`font-serif text-xl tracking-tight text-ink ${className}`}
-    >
-      Lever<span className="text-accent">.</span>
+    <Link href={href} className={`select-none ${className}`}>
+      <span className="ink-edge-sm inline-block -rotate-2 rounded-lg bg-pop-red px-3 py-0.5 font-comic text-2xl tracking-wide text-white">
+        LEVER
+      </span>
     </Link>
   );
 }

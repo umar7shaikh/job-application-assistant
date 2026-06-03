@@ -7,10 +7,10 @@ export const metadata: Metadata = { title: "Create account · Lever" };
 export default function SignupPage() {
   return (
     <div>
-      <h1 className="font-serif text-3xl tracking-tight text-ink">
+      <h1 className="font-comic text-4xl tracking-wide text-ink">
         Create your account
       </h1>
-      <p className="mt-2 text-sm text-ink-soft">
+      <p className="mt-2 text-sm font-medium text-ink/70">
         Start tailoring applications in minutes.
       </p>
       <div className="mt-8">

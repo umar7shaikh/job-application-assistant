@@ -37,35 +37,35 @@ export default async function ApplicationsPage() {
 
   return (
     <div>
-      <p className="text-sm text-ink-soft">Applications</p>
-      <h1 className="mt-1 font-serif text-4xl tracking-tight text-ink">
+      <span className="c-chip bg-pop-yellow text-ink">Applications</span>
+      <h1 className="mt-3 font-comic text-5xl tracking-wide text-ink">
         Application history
       </h1>
-      <p className="mt-3 max-w-xl text-ink-soft">
+      <p className="mt-3 max-w-xl font-medium text-ink/75">
         Every job you&rsquo;re tracking — which resume you used, the status, and
         when you applied.
       </p>
 
       {rows.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-dashed border-line-strong bg-surface px-6 py-10 text-center text-sm text-ink-soft">
+        <p className="mt-8 rounded-2xl border-[2.5px] border-dashed border-ink/40 bg-white px-6 py-10 text-center text-sm font-medium text-ink/60">
           Nothing tracked yet. Open a job and choose{" "}
-          <span className="font-medium text-ink">Track application</span>.
+          <span className="font-bold text-ink">Track application</span>.
         </p>
       ) : (
-        <div className="mt-8 overflow-hidden rounded-xl border border-line">
+        <div className="c-card mt-8 overflow-hidden">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="bg-surface text-left text-xs uppercase tracking-wide text-ink-faint">
-                <th className="px-4 py-3 font-medium">Role</th>
-                <th className="px-4 py-3 font-medium">Resume</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Applied</th>
+              <tr className="border-b-[3px] border-ink bg-paper text-left text-xs font-extrabold uppercase tracking-wide text-ink/70">
+                <th className="px-4 py-3">Role</th>
+                <th className="px-4 py-3">Resume</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Applied</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
             <tbody>
               {rows.map(({ app, jobTitle, jobCompany, jobUrl, resumeName }) => (
-                <tr key={app.id} className="border-t border-line bg-surface">
+                <tr key={app.id} className="border-t-2 border-ink/10 bg-white">
                   <td className="px-4 py-3">
                     <Link
                       href={`/jobs/${app.jobId}`}

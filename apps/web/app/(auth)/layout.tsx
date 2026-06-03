@@ -12,12 +12,14 @@ export default async function AuthLayout({
   if (user) redirect("/dashboard");
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="halftone-bg flex min-h-screen flex-col bg-paper">
       <header className="px-6 py-6">
         <Wordmark />
       </header>
       <main className="flex flex-1 items-center justify-center px-6 pb-28">
-        <div className="w-full max-w-sm">{children}</div>
+        <div className="ink-edge w-full max-w-sm rounded-2xl bg-white p-7">
+          {children}
+        </div>
       </main>
     </div>
   );

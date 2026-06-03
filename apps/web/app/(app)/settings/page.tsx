@@ -17,11 +17,11 @@ export default async function SettingsPage() {
 
   return (
     <div className="max-w-2xl">
-      <p className="text-sm text-ink-soft">Settings</p>
-      <h1 className="mt-1 font-serif text-4xl tracking-tight text-ink">
+      <span className="c-chip bg-pop-yellow text-ink">Settings</span>
+      <h1 className="mt-3 font-comic text-5xl tracking-wide text-ink">
         API keys
       </h1>
-      <p className="mt-3 text-ink-soft">
+      <p className="mt-3 font-medium text-ink/75">
         Lever uses your own keys so you stay in control of usage and cost. Keys
         are encrypted at rest and never shown again after saving.
       </p>

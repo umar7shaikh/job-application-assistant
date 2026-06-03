@@ -76,8 +76,8 @@ export default async function JobsPage() {
   return (
     <div>
       <div>
-        <p className="text-sm text-ink-soft">Jobs</p>
-        <h1 className="mt-1 font-serif text-4xl tracking-tight text-ink">
+        <span className="c-chip bg-pop-yellow text-ink">Jobs</span>
+        <h1 className="mt-3 font-comic text-5xl tracking-wide text-ink">
           Find jobs
         </h1>
       </div>
@@ -95,7 +95,7 @@ export default async function JobsPage() {
               {runs.map((r) => (
                 <span
                   key={r.id}
-                  className="rounded-full border border-line bg-surface px-3 py-1 text-ink-soft"
+                  className="rounded-full border-2 border-ink bg-white px-3 py-1 font-semibold text-ink/70"
                 >
                   {r.source} ·{" "}
                   <span className={statusColor[r.status] ?? "text-ink-soft"}>
@@ -114,7 +114,7 @@ export default async function JobsPage() {
         {/* Saved jobs — the scrolling area. */}
         <div>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-serif text-xl tracking-tight text-ink">
+            <h2 className="font-comic text-2xl tracking-wide text-ink">
               Saved jobs
             </h2>
             <div className="flex items-center gap-4">
@@ -126,21 +126,18 @@ export default async function JobsPage() {
           </div>
 
           {found.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-line-strong bg-surface px-6 py-10 text-center text-sm text-ink-soft">
+            <p className="rounded-2xl border-[2.5px] border-dashed border-ink/40 bg-white px-6 py-10 text-center text-sm font-medium text-ink/60">
               No jobs yet. Fill in the search on the left to find some.
             </p>
           ) : (
             <ul className="space-y-3">
               {found.map((j) => (
-                <li
-                  key={j.id}
-                  className="rounded-xl border border-line bg-surface p-5"
-                >
+                <li key={j.id} className="c-card p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <Link
                         href={`/jobs/${j.id}`}
-                        className="font-serif text-lg text-ink hover:text-accent"
+                        className="font-comic text-xl tracking-wide text-ink hover:text-pop-green"
                       >
                         {j.title}
                       </Link>
@@ -154,7 +151,7 @@ export default async function JobsPage() {
                       {scores.has(j.id) ? (
                         <ScoreChip score={scores.get(j.id)!} />
                       ) : null}
-                      <span className="rounded-full bg-canvas px-2 py-0.5 text-xs text-ink-faint">
+                      <span className="rounded-full border-2 border-ink bg-white px-2 py-0.5 text-xs font-bold text-ink/60">
                         {j.source}
                       </span>
                     </div>

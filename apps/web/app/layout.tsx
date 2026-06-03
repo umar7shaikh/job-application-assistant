@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Newsreader } from "next/font/google";
+import { Inter, Newsreader, Bangers } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,6 +16,14 @@ const newsreader = Newsreader({
   style: ["normal", "italic"],
 });
 
+// Comic display face for the landing page hero/panels.
+const bangers = Bangers({
+  variable: "--font-bangers",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Lever — apply to jobs, intelligently",
   description:
@@ -28,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${inter.variable} ${newsreader.variable} ${bangers.variable} h-full antialiased`}
     >
       <body className="min-h-full">{children}</body>
     </html>

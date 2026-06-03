@@ -5,8 +5,7 @@ import { addManualJob, type AddJobState } from "@/app/actions/jobs";
 import { TextField } from "@/components/ui/text-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 
-const inputCls =
-  "w-full rounded-md border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none";
+const inputCls = "c-field";
 
 export function PasteJobForm() {
   const [state, action] = useActionState<AddJobState, FormData>(
@@ -15,7 +14,7 @@ export function PasteJobForm() {
   );
 
   return (
-    <form action={action} className="rounded-xl border border-line bg-surface p-6">
+    <form action={action} className="c-card p-6">
       <p className="mb-4 text-sm text-ink-soft">
         No scraper needed — paste a job description from anywhere and we&rsquo;ll
         save it so you can score fit and tailor against it.
@@ -35,9 +34,7 @@ export function PasteJobForm() {
           placeholder="https://… (optional)"
         />
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">
-            Job description
-          </span>
+          <span className="c-label">Job description</span>
           <textarea
             name="jdText"
             rows={10}

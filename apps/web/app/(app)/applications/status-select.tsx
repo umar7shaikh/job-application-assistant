@@ -17,7 +17,7 @@ export function StatusSelect({
         name="status"
         defaultValue={value}
         onChange={(e) => e.currentTarget.form?.requestSubmit()}
-        className="rounded-md border border-line-strong bg-surface px-2.5 py-1.5 text-xs text-ink capitalize focus:border-accent focus:outline-none"
+        className="rounded-lg border-2 border-ink bg-white px-2.5 py-1.5 text-xs font-bold text-ink capitalize focus:outline-none focus:ring-[3px] focus:ring-pop-yellow"
       >
         {applicationStatus.map((s) => (
           <option key={s} value={s} className="capitalize">

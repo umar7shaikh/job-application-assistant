@@ -88,7 +88,7 @@ export default async function JobDetailPage({
 
       <div className="mt-4 flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl leading-tight tracking-tight text-ink">
+          <h1 className="font-comic text-4xl leading-tight tracking-wide text-ink">
             {job.title}
           </h1>
           <p className="mt-1 text-ink-soft">
@@ -114,7 +114,7 @@ export default async function JobDetailPage({
           href={job.url}
           target="_blank"
           rel="noreferrer"
-          className="mt-4 inline-block rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-strong"
+          className="mt-4 inline-block c-btn"
         >
           Open original posting ↗
         </a>
@@ -133,8 +133,8 @@ export default async function JobDetailPage({
         )}
       </div>
 
-      <section className="mt-8 rounded-xl border border-line bg-surface p-6">
-        <h2 className="font-serif text-xl tracking-tight text-ink">
+      <section className="mt-8 c-card p-6">
+        <h2 className="font-comic text-2xl tracking-wide text-ink">
           Job description
         </h2>
         {job.jdText ? (
@@ -150,7 +150,7 @@ export default async function JobDetailPage({
 
       <section className="mt-8">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-serif text-2xl tracking-tight text-ink">
+          <h2 className="font-comic text-3xl tracking-wide text-ink">
             Fit analysis
           </h2>
           {profile && match ? (
@@ -159,7 +159,7 @@ export default async function JobDetailPage({
         </div>
 
         {!profile ? (
-          <p className="rounded-xl border border-dashed border-line-strong bg-surface px-6 py-8 text-center text-sm text-ink-soft">
+          <p className="rounded-2xl border-[2.5px] border-dashed border-ink/40 bg-white px-6 py-8 text-center text-sm font-medium text-ink/60">
             Add a resume first, then we can score this job against it.{" "}
             <Link href="/resumes" className="font-medium text-accent hover:underline">
               Add a resume →
@@ -168,7 +168,7 @@ export default async function JobDetailPage({
         ) : match ? (
           <FitCard fit={match.fit} analysis={job.jdAnalysis} />
         ) : (
-          <div className="rounded-xl border border-line bg-surface p-6">
+          <div className="c-card p-6">
             <p className="mb-4 text-sm text-ink-soft">
               Score how well this role fits{" "}
               <span className="font-medium text-ink">{profile.name}</span> — we
@@ -182,7 +182,7 @@ export default async function JobDetailPage({
       {profile ? (
         <section className="mt-10">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-serif text-2xl tracking-tight text-ink">
+            <h2 className="font-comic text-3xl tracking-wide text-ink">
               Tailored application
             </h2>
             {resumeDoc ? (
@@ -197,13 +197,13 @@ export default async function JobDetailPage({
                   href={`/api/documents/${resumeDoc.id}/pdf`}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-strong"
+                  className="c-btn"
                 >
                   Resume (PDF) ↗
                 </a>
                 <a
                   href={`/api/documents/${resumeDoc.id}/tex`}
-                  className="rounded-md border border-line-strong bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent"
+                  className="c-btn c-btn-ghost"
                 >
                   Resume (.tex for Overleaf) ↓
                 </a>
@@ -213,13 +213,13 @@ export default async function JobDetailPage({
                       href={`/api/documents/${coverDoc.id}/pdf`}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-md border border-line-strong bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent"
+                      className="c-btn c-btn-ghost"
                     >
                       Cover letter (PDF) ↗
                     </a>
                     <a
                       href={`/api/documents/${coverDoc.id}/tex`}
-                      className="rounded-md border border-line-strong bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent"
+                      className="c-btn c-btn-ghost"
                     >
                       Cover letter (.tex) ↓
                     </a>
@@ -227,8 +227,8 @@ export default async function JobDetailPage({
                 ) : null}
               </div>
               {coverBody ? (
-                <div className="rounded-xl border border-line bg-surface p-6">
-                  <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-faint">
+                <div className="c-card p-6">
+                  <h3 className="mb-2 text-xs font-extrabold uppercase tracking-wide text-ink/60">
                     Cover letter
                   </h3>
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink-soft">
@@ -238,7 +238,7 @@ export default async function JobDetailPage({
               ) : null}
             </div>
           ) : (
-            <div className="rounded-xl border border-line bg-surface p-6">
+            <div className="c-card p-6">
               <p className="mb-4 text-sm text-ink-soft">
                 Generate a resume reworded for this role plus a matching cover
                 letter, both as polished PDFs. We only re-emphasize what&rsquo;s

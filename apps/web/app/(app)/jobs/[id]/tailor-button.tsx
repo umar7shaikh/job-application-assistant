@@ -42,16 +42,16 @@ export function TailorButton({
       <input type="hidden" name="mode" value={mode} />
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex overflow-hidden rounded-md border border-line-strong">
+        <div className="flex overflow-hidden rounded-lg border-2 border-ink">
           {MODES.map((m) => (
             <button
               key={m.value}
               type="button"
               onClick={() => setMode(m.value)}
-              className={`px-3 py-1.5 text-xs transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors ${
                 mode === m.value
-                  ? "bg-accent text-white"
-                  : "bg-surface text-ink-soft hover:text-ink"
+                  ? "bg-pop-green text-white"
+                  : "bg-white text-ink/60 hover:text-ink"
               }`}
             >
               {m.label}

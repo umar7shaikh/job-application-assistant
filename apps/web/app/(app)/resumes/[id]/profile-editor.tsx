@@ -5,9 +5,8 @@ import type { LayoutPrefs, MasterProfile } from "@builder/shared";
 import { saveProfile, type SaveProfileState } from "@/app/actions/resumes";
 import { SubmitButton } from "@/components/ui/submit-button";
 
-const inputCls =
-  "w-full rounded-md border border-line-strong bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none";
-const labelCls = "mb-1 block text-xs font-medium text-ink-soft";
+const inputCls = "c-field";
+const labelCls = "c-label";
 
 function updateAt<T>(arr: T[], i: number, patch: Partial<T>): T[] {
   return arr.map((it, idx) => (idx === i ? { ...it, ...patch } : it));
@@ -54,9 +53,9 @@ function Section({
   action?: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-line bg-surface p-6">
+    <section className="c-card p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-serif text-xl tracking-tight text-ink">{title}</h2>
+        <h2 className="font-comic text-2xl tracking-wide text-ink">{title}</h2>
         {action}
       </div>
       {children}
@@ -130,7 +129,7 @@ export function ProfileEditor({
       <input type="hidden" name="data" value={serialized} />
 
       {/* Name + save bar */}
-      <div className="flex items-end gap-4 rounded-xl border border-line bg-surface p-6">
+      <div className="c-card flex items-end gap-4 p-6">
         <div className="flex-1">
           <label className={labelCls}>Resume name</label>
           <input
@@ -240,7 +239,7 @@ export function ProfileEditor({
       >
         <div className="space-y-5">
           {p.experience.map((exp, i) => (
-            <div key={i} className="rounded-lg border border-line p-4">
+            <div key={i} className="rounded-lg border-2 border-ink/15 bg-paper p-4">
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs font-medium text-ink-faint">
                   Role {i + 1}
@@ -390,7 +389,7 @@ export function ProfileEditor({
       >
         <div className="space-y-5">
           {p.education.map((ed, i) => (
-            <div key={i} className="rounded-lg border border-line p-4">
+            <div key={i} className="rounded-lg border-2 border-ink/15 bg-paper p-4">
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs font-medium text-ink-faint">
                   Entry {i + 1}
@@ -483,7 +482,7 @@ export function ProfileEditor({
       >
         <div className="space-y-4">
           {p.skills.map((g, i) => (
-            <div key={i} className="rounded-lg border border-line p-4">
+            <div key={i} className="rounded-lg border-2 border-ink/15 bg-paper p-4">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <input
                   className={inputCls}
@@ -555,7 +554,7 @@ export function ProfileEditor({
       >
         <div className="space-y-5">
           {p.projects.map((pr, i) => (
-            <div key={i} className="rounded-lg border border-line p-4">
+            <div key={i} className="rounded-lg border-2 border-ink/15 bg-paper p-4">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <input
                   className={inputCls}
@@ -687,7 +686,7 @@ export function ProfileEditor({
         </p>
         <div className="space-y-5">
           {p.customSections.map((s, i) => (
-            <div key={i} className="rounded-lg border border-line p-4">
+            <div key={i} className="rounded-lg border-2 border-ink/15 bg-paper p-4">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <input
                   className={inputCls}

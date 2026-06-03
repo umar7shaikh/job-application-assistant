@@ -15,15 +15,15 @@ export function JobIntake({
   const [tab, setTab] = useState<"search" | "paste">("search");
 
   const tabCls = (active: boolean) =>
-    `px-3 py-1.5 text-sm font-medium transition-colors ${
+    `px-3 py-1.5 text-sm font-bold uppercase tracking-wide transition-colors ${
       active
-        ? "border-b-2 border-accent text-ink"
-        : "border-b-2 border-transparent text-ink-soft hover:text-ink"
+        ? "border-b-[3px] border-pop-green text-ink"
+        : "border-b-[3px] border-transparent text-ink/50 hover:text-ink"
     }`;
 
   return (
     <div>
-      <div className="mb-4 flex gap-4 border-b border-line">
+      <div className="mb-4 flex gap-4 border-b-2 border-ink/15">
         <button
           type="button"
           onClick={() => setTab("search")}

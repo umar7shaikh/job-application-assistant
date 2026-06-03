@@ -9,8 +9,7 @@ import { experienceOptions, datePostedOptions } from "@/lib/sources/types";
 import { TextField } from "@/components/ui/text-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 
-const inputCls =
-  "w-full rounded-md border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none";
+const inputCls = "c-field";
 
 export function ScrapeForm({
   apifyConnected,
@@ -34,10 +33,10 @@ export function ScrapeForm({
   const connected = source === "apify" ? apifyConnected : rapidapiConnected;
 
   return (
-    <form action={action} className="rounded-xl border border-line bg-surface p-6">
+    <form action={action} className="c-card p-6">
       <div className="grid gap-4">
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">Source</span>
+          <span className="c-label">Source</span>
           <select
             name="source"
             value={source}
@@ -52,7 +51,7 @@ export function ScrapeForm({
       </div>
 
       {!connected ? (
-        <p className="mt-4 rounded-md border border-line-strong bg-canvas px-3 py-2.5 text-sm text-ink-soft">
+        <p className="mt-4 rounded-lg border-2 border-ink/15 bg-paper px-3 py-2.5 text-sm text-ink-soft">
           {source === "apify"
             ? "Connect your Apify token "
             : "Connect your RapidAPI (JSearch) key "}
@@ -73,7 +72,7 @@ export function ScrapeForm({
 
       <div className="mt-4">
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">
+          <span className="c-label">
             Experience level
           </span>
           <select name="experience" defaultValue="" className={inputCls}>
@@ -89,7 +88,7 @@ export function ScrapeForm({
       {source === "apify" ? (
         <div className="mt-4 space-y-4">
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-ink">
+            <span className="c-label">
               Job site
             </span>
             <select
@@ -114,7 +113,7 @@ export function ScrapeForm({
           {actor === "curious_coder/linkedin-jobs-scraper" ? (
             <>
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-ink">
+                <span className="c-label">
                   Date posted
                 </span>
                 <select name="datePosted" defaultValue="" className={inputCls}>
@@ -126,7 +125,7 @@ export function ScrapeForm({
                 </select>
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-ink">
+                <span className="c-label">
                   Or paste LinkedIn search URL(s)
                 </span>
                 <textarea

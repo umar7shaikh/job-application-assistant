@@ -25,11 +25,11 @@ export default async function ResumesPage() {
 
   return (
     <div className="max-w-3xl">
-      <p className="text-sm text-ink-soft">Resumes</p>
-      <h1 className="mt-1 font-serif text-4xl tracking-tight text-ink">
+      <span className="c-chip bg-pop-yellow text-ink">Resumes</span>
+      <h1 className="mt-3 font-comic text-5xl tracking-wide text-ink">
         Your master profiles
       </h1>
-      <p className="mt-3 text-ink-soft">
+      <p className="mt-3 font-medium text-ink/75">
         Upload a resume and we&rsquo;ll parse it into a structured profile you can
         edit. Tailoring later draws from these.
       </p>
@@ -47,18 +47,18 @@ export default async function ResumesPage() {
             return (
               <li
                 key={p.id}
-                className="flex items-center justify-between rounded-xl border border-line bg-surface p-5"
+                className="c-card flex items-center justify-between p-5"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/resumes/${p.id}`}
-                      className="truncate font-serif text-lg text-ink hover:text-accent"
+                      className="truncate font-comic text-xl tracking-wide text-ink hover:text-pop-green"
                     >
                       {p.name}
                     </Link>
                     {p.isDefault ? (
-                      <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-medium text-accent-strong">
+                      <span className="c-chip bg-pop-green text-white">
                         Default
                       </span>
                     ) : null}

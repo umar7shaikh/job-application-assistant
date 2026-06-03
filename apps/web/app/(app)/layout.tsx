@@ -10,39 +10,38 @@ export default async function AppLayout({
 }) {
   const user = await requireUser();
 
+  const navLinks = [
+    ["Dashboard", "/dashboard"],
+    ["Resumes", "/resumes"],
+    ["Jobs", "/jobs"],
+    ["Applications", "/applications"],
+    ["Settings", "/settings"],
+  ] as const;
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b border-line bg-surface">
+    <div className="halftone-bg flex min-h-screen flex-col bg-paper">
+      <header className="border-b-[3px] border-ink bg-paper">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-8">
             <Wordmark href="/dashboard" />
-            <nav className="hidden items-center gap-6 text-sm text-ink-soft sm:flex">
-              <Link href="/dashboard" className="transition-colors hover:text-ink">
-                Dashboard
-              </Link>
-              <Link href="/resumes" className="transition-colors hover:text-ink">
-                Resumes
-              </Link>
-              <Link href="/jobs" className="transition-colors hover:text-ink">
-                Jobs
-              </Link>
-              <Link
-                href="/applications"
-                className="transition-colors hover:text-ink"
-              >
-                Applications
-              </Link>
-              <Link href="/settings" className="transition-colors hover:text-ink">
-                Settings
-              </Link>
+            <nav className="hidden items-center gap-5 text-sm font-bold uppercase tracking-wide text-ink/55 sm:flex">
+              {navLinks.map(([label, href]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="transition-colors hover:text-ink"
+                >
+                  {label}
+                </Link>
+              ))}
             </nav>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden text-sm text-ink-soft sm:block">
+            <span className="hidden text-sm font-medium text-ink/55 sm:block">
               {user.email}
             </span>
             <form action={logout}>
-              <button className="text-sm text-ink-soft transition-colors hover:text-ink">
+              <button className="ink-edge-sm rounded-lg bg-white px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-ink transition-transform hover:-translate-y-0.5">
                 Sign out
               </button>
             </form>

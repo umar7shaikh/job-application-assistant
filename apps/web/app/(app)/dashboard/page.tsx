@@ -88,46 +88,46 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <p className="text-sm text-ink-soft">Dashboard</p>
-      <h1 className="mt-1 font-serif text-4xl tracking-tight text-ink">
+      <span className="ink-edge-sm inline-block rounded-full bg-pop-yellow px-3 py-0.5 font-comic text-base tracking-wide text-ink">
+        DASHBOARD
+      </span>
+      <h1 className="mt-3 font-comic text-5xl tracking-wide text-ink">
         Hello, {greetingName}.
       </h1>
-      <p className="mt-3 max-w-xl text-ink-soft">
+      <p className="mt-3 max-w-xl font-medium text-ink/75">
         Your workspace for finding, tailoring, and applying to jobs — without
         the busywork. Here&rsquo;s how to get set up.
       </p>
 
-      <ol className="mt-10 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
+      <ol className="mt-10 grid gap-5 sm:grid-cols-2">
         {steps.map((step) => (
-          <li key={step.n} className="bg-surface p-6">
+          <li key={step.n} className="ink-edge rounded-2xl bg-white p-6">
             <div className="flex items-center justify-between">
               <span
-                className={`flex h-7 w-7 items-center justify-center rounded-full text-sm tnum ${
+                className={`ink-edge-sm grid h-10 w-10 place-items-center rounded-full font-comic text-xl ${
                   step.done
-                    ? "bg-accent text-white"
-                    : "border border-line-strong text-ink-soft"
+                    ? "bg-pop-green text-white"
+                    : "bg-pop-yellow text-ink"
                 }`}
               >
                 {step.done ? "✓" : step.n}
               </span>
-              {step.soon ? (
-                <span className="rounded-full bg-canvas px-2 py-0.5 text-xs text-ink-faint">
-                  Coming soon
+              {step.done ? (
+                <span className="text-xs font-extrabold uppercase tracking-wide text-pop-green">
+                  Done
                 </span>
-              ) : step.done ? (
-                <span className="text-xs font-medium text-accent">Done</span>
               ) : null}
             </div>
-            <h2 className="mt-4 font-serif text-xl tracking-tight text-ink">
+            <h2 className="mt-4 font-comic text-2xl tracking-wide text-ink">
               {step.title}
             </h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
+            <p className="mt-1.5 text-sm font-medium leading-relaxed text-ink/75">
               {step.body}
             </p>
             {step.href ? (
               <Link
                 href={step.href}
-                className="mt-4 inline-block text-sm font-medium text-accent hover:underline"
+                className="mt-4 inline-block text-sm font-extrabold uppercase tracking-wide text-ink underline-offset-4 hover:underline"
               >
                 {step.cta} →
               </Link>

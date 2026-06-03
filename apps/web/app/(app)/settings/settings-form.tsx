@@ -8,13 +8,13 @@ import { SubmitButton } from "@/components/ui/submit-button";
 
 function ConnectedBadge({ connected }: { connected: boolean }) {
   return connected ? (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent-strong">
-      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+    <span className="c-chip bg-pop-green text-white">
+      <span className="h-1.5 w-1.5 rounded-full bg-white" />
       Connected
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-canvas px-2.5 py-1 text-xs font-medium text-ink-faint">
-      <span className="h-1.5 w-1.5 rounded-full bg-line-strong" />
+    <span className="c-chip bg-white text-ink/50">
+      <span className="h-1.5 w-1.5 rounded-full bg-ink/30" />
       Not set
     </span>
   );
@@ -41,12 +41,12 @@ export function SettingsForm({
   return (
     <form
       action={action}
-      className="space-y-px overflow-hidden rounded-xl border border-line bg-line"
+      className="ink-edge space-y-[3px] overflow-hidden rounded-2xl bg-ink"
     >
       {/* Apify */}
-      <section className="bg-surface p-6">
+      <section className="bg-white p-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-serif text-xl tracking-tight text-ink">Apify</h2>
+          <h2 className="font-comic text-2xl tracking-wide text-ink">Apify</h2>
           <ConnectedBadge connected={apifyConnected} />
         </div>
         <p className="mt-1.5 text-sm text-ink-soft">
@@ -75,9 +75,9 @@ export function SettingsForm({
       </section>
 
       {/* JSearch (RapidAPI) */}
-      <section className="bg-surface p-6">
+      <section className="bg-white p-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-serif text-xl tracking-tight text-ink">
+          <h2 className="font-comic text-2xl tracking-wide text-ink">
             JSearch job API
           </h2>
           <ConnectedBadge connected={rapidapiConnected} />
@@ -108,9 +108,9 @@ export function SettingsForm({
       </section>
 
       {/* AI */}
-      <section className="bg-surface p-6">
+      <section className="bg-white p-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-serif text-xl tracking-tight text-ink">
+          <h2 className="font-comic text-2xl tracking-wide text-ink">
             AI provider
           </h2>
           <ConnectedBadge connected={aiConnected} />
@@ -123,14 +123,12 @@ export function SettingsForm({
         </p>
         <div className="mt-4 space-y-4">
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-ink">
-              Provider
-            </span>
+            <span className="c-label">Provider</span>
             <select
               name="aiProvider"
               value={provider}
               onChange={(e) => setProvider(e.target.value as AiProviderId | "")}
-              className="w-full rounded-md border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink focus:border-accent focus:outline-none"
+              className="c-field"
             >
               <option value="">Select a provider…</option>
               {aiProviders.map((p) => (
@@ -143,10 +141,10 @@ export function SettingsForm({
           </label>
 
           {selected ? (
-            <div className="flex items-center justify-between rounded-md bg-canvas px-3 py-2.5 text-xs">
+            <div className="flex items-center justify-between rounded-lg border-2 border-ink/15 bg-paper px-3 py-2.5 text-xs">
               <span className="text-ink-soft">
                 {selected.free ? (
-                  <span className="mr-1.5 rounded-full bg-accent-soft px-2 py-0.5 font-medium text-accent-strong">
+                  <span className="mr-1.5 rounded-full bg-pop-yellow px-2 py-0.5 font-bold text-ink">
                     Free
                   </span>
                 ) : null}
@@ -178,7 +176,7 @@ export function SettingsForm({
       </section>
 
       {/* Actions */}
-      <section className="flex items-center justify-between bg-surface p-6">
+      <section className="flex items-center justify-between bg-white p-6">
         <div className="text-sm" aria-live="polite">
           {state?.ok ? (
             <span className="text-accent">Saved.</span>
