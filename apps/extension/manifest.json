@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Lever Autofill",
+  "version": "0.1.0",
+  "description": "Fill job application forms from your Lever resume profile. You review and submit.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://localhost:3000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Lever Autofill"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/*
+  Editorial Ink — the committed design system (see PROJECT_SPEC.md §8).
+  Deliberately not the generic AI look: cool off-white canvas (no cream),
+  one emerald accent, serif display + clean sans, hairline borders.
+*/
+@theme {
+  --color-canvas: #f4f5f3;
+  --color-surface: #ffffff;
+  --color-ink: #14171c;
+  --color-ink-soft: #4a4f57;
+  --color-ink-faint: #898f98;
+  --color-line: #e2e3df;
+  --color-line-strong: #d2d4cd;
+  --color-accent: #0e6e55;
+  --color-accent-strong: #0a5743;
+  --color-accent-soft: #e6f0ec;
+  --color-danger: #9b2c2c;
+  --color-danger-soft: #f6e9e7;
+}
+
+/* Inline so Tailwind resolves the next/font CSS variables. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, "Times New Roman",
+    serif;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+  }
+  /* Tabular figures for data contexts. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Accessible focus ring in the accent color. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

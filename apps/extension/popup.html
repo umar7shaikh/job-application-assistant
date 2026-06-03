@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --canvas: #f4f5f3;
+        --surface: #ffffff;
+        --ink: #14171c;
+        --soft: #4a4f57;
+        --faint: #898f98;
+        --line: #e2e3df;
+        --accent: #0e6e55;
+        --accent-strong: #0a5743;
+      }
+      * { box-sizing: border-box; }
+      body {
+        width: 320px;
+        margin: 0;
+        padding: 16px;
+        font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+        background: var(--canvas);
+        color: var(--ink);
+      }
+      h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 18px;
+        margin: 0 0 2px;
+        letter-spacing: -0.01em;
+      }
+      h1 .dot { color: var(--accent); }
+      p.sub { margin: 0 0 14px; font-size: 12px; color: var(--soft); }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+      }
+      label { display: block; font-size: 11px; color: var(--faint); margin-bottom: 4px; }
+      input {
+        width: 100%;
+        border: 1px solid #d2d4cd;
+        border-radius: 6px;
+        padding: 7px 9px;
+        font-size: 12px;
+        color: var(--ink);
+      }
+      button {
+        width: 100%;
+        border: none;
+        border-radius: 6px;
+        padding: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+      .primary { background: var(--accent); color: #fff; }
+      .primary:hover { background: var(--accent-strong); }
+      .secondary { background: var(--surface); color: var(--ink); border: 1px solid #d2d4cd; }
+      .status { font-size: 12px; color: var(--soft); margin-top: 8px; min-height: 16px; }
+      .status.ok { color: var(--accent-strong); }
+      .status.err { color: #9b2c2c; }
+      .who { font-size: 12px; color: var(--ink); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <h1>Lever<span class="dot">.</span> Autofill</h1>
+    <p class="sub">Fill applications from your resume. You review &amp; submit.</p>
+
+    <div class="card">
+      <label for="appUrl">App URL</label>
+      <input id="appUrl" type="text" value="http://localhost:3000" />
+      <button id="sync" class="secondary">Sync my profile</button>
+      <div id="syncStatus" class="status"></div>
+    </div>
+
+    <div class="card">
+      <div id="who" class="who">No profile synced yet.</div>
+      <button id="fill" class="primary">Autofill this page</button>
+      <div id="fillStatus" class="status"></div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

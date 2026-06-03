@@ -1,0 +1,18 @@
+{
+  "name": "builder",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run db:migrate && npm run dev -w web",
+    "build": "npm run build -w web",
+    "start": "npm run start -w web",
+    "lint": "npm run lint -w web",
+    "db:generate": "npm run generate -w @builder/db",
+    "db:migrate": "npm run migrate -w @builder/db",
+    "db:studio": "npm run studio -w @builder/db"
+  }
+}

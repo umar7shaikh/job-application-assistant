@@ -1,0 +1,1 @@
+ALTER TABLE "user_secrets" ADD COLUMN "rapidapi_key_enc" text;

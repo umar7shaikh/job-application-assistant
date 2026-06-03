@@ -1,0 +1,6 @@
+{
+  "name": "extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lever Autofill — Manifest V3 browser extension (no build step; load unpacked)."
+}
