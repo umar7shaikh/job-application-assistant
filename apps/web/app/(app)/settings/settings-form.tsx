@@ -5,6 +5,7 @@ import { aiProviders, getAiProvider, type AiProviderId } from "@builder/shared";
 import { saveSecrets, type SecretsState } from "@/app/actions/secrets";
 import { TextField } from "@/components/ui/text-field";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { ApifyGuide } from "./apify-guide";
 
 function ConnectedBadge({ connected }: { connected: boolean }) {
   return connected ? (
@@ -72,6 +73,7 @@ export function SettingsForm({
             }
           />
         </div>
+        <ApifyGuide />
       </section>
 
       {/* JSearch (RapidAPI) */}
