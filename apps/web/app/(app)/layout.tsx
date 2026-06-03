@@ -16,6 +16,7 @@ export default async function AppLayout({
     ["Jobs", "/jobs"],
     ["Applications", "/applications"],
     ["Settings", "/settings"],
+    ["Help", "/help"],
   ] as const;
 
   return (

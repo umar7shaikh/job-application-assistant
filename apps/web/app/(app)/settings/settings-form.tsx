@@ -6,6 +6,8 @@ import { saveSecrets, type SecretsState } from "@/app/actions/secrets";
 import { TextField } from "@/components/ui/text-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { ApifyGuide } from "./apify-guide";
+import { RapidApiGuide } from "./rapidapi-guide";
+import { AiGuide } from "./ai-guide";
 
 function ConnectedBadge({ connected }: { connected: boolean }) {
   return connected ? (
@@ -107,6 +109,7 @@ export function SettingsForm({
             }
           />
         </div>
+        <RapidApiGuide />
       </section>
 
       {/* AI */}
@@ -173,6 +176,10 @@ export function SettingsForm({
                 ? "•••• saved — leave blank to keep"
                 : selected?.placeholder ?? "Your API key"
             }
+          />
+          <AiGuide
+            providerLabel={selected?.label}
+            consoleUrl={selected?.consoleUrl}
           />
         </div>
       </section>

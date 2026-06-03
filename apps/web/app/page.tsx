@@ -52,6 +52,24 @@ function IconApply() {
   );
 }
 
+function IconKey() {
+  return (
+    <svg viewBox="0 0 48 48" className="h-10 w-10" aria-hidden>
+      <circle cx="18" cy="18" r="8" {...stroke} />
+      <path d="M23 23l15 15M34 34l4-4M30 30l3 3" {...stroke} />
+    </svg>
+  );
+}
+function IconTarget() {
+  return (
+    <svg viewBox="0 0 48 48" className="h-10 w-10" aria-hidden>
+      <circle cx="24" cy="24" r="16" {...stroke} />
+      <circle cx="24" cy="24" r="8" {...stroke} />
+      <circle cx="24" cy="24" r="2" fill="#14171c" stroke="none" />
+    </svg>
+  );
+}
+
 const steps = [
   {
     n: "1",
@@ -73,6 +91,39 @@ const steps = [
     icon: <IconApply />,
     title: "APPLY & TRACK",
     body: "Download a crisp PDF (or Overleaf-ready LaTeX), let the browser extension autofill the form, and hit submit yourself. Lever logs it: role, résumé used, date, status.",
+  },
+];
+
+const journey = [
+  {
+    n: "1",
+    icon: <IconKey />,
+    title: "CONNECT KEYS",
+    body: "Add your free Apify + AI keys in Settings — guided, and encrypted at rest.",
+  },
+  {
+    n: "2",
+    icon: <IconTailor />,
+    title: "ADD RÉSUMÉ",
+    body: "Upload or paste it; Lever turns it into an editable master profile.",
+  },
+  {
+    n: "3",
+    icon: <IconScrape />,
+    title: "FIND JOBS",
+    body: "Scrape live openings with your key — or just paste any job description.",
+  },
+  {
+    n: "4",
+    icon: <IconTarget />,
+    title: "SCORE & TAILOR",
+    body: "Get a fit score, then a rewritten résumé + cover letter for that exact role.",
+  },
+  {
+    n: "5",
+    icon: <IconApply />,
+    title: "APPLY & TRACK",
+    body: "Autofill the form, click submit yourself, and log every application.",
   },
 ];
 
@@ -253,34 +304,45 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ------------------------------------------------ How it works */}
+        {/* ------------------------------------------ The story (comic strip) */}
         <section id="how" className="py-12">
           <div className="mb-8 flex items-end justify-between gap-4">
-            <h2 className="font-comic text-5xl tracking-wide sm:text-6xl">
-              THE THREE-PANEL PLAN
-            </h2>
-            <div className="speedlines hidden h-12 flex-1 rounded sm:block" />
+            <div>
+              <span className="ink-edge-sm inline-block -rotate-1 rounded-full bg-pop-blue px-3 py-0.5 font-comic text-lg tracking-wide text-white">
+                ★ THE WHOLE STORY
+              </span>
+              <h2 className="mt-3 font-comic text-5xl leading-[0.95] tracking-wide sm:text-6xl">
+                BLANK ACCOUNT
+                <br />
+                TO APPLIED — IN 5 PANELS
+              </h2>
+            </div>
+            <div className="speedlines hidden h-12 flex-1 self-end rounded lg:block" />
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {steps.map((s) => (
-              <article
-                key={s.n}
-                className="ink-edge flex flex-col rounded-2xl bg-white p-6"
-              >
+          {/* Ink-gutter panels read like a real comic strip. */}
+          <div className="grid gap-[3px] overflow-hidden rounded-2xl border-[3px] border-ink bg-ink shadow-[7px_7px_0_0_var(--color-ink)] sm:grid-cols-2 lg:grid-cols-5">
+            {journey.map((s) => (
+              <article key={s.n} className="flex flex-col bg-white p-5">
                 <div className="flex items-center justify-between">
-                  <PanelNo n={s.n} color={s.tab} />
-                  <span className="text-ink/80">{s.icon}</span>
+                  <span className="ink-edge-sm grid h-10 w-10 place-items-center rounded-full bg-pop-yellow font-comic text-xl text-ink">
+                    {s.n}
+                  </span>
+                  <span className="text-ink/70">{s.icon}</span>
                 </div>
-                <h3 className="mt-5 font-comic text-3xl tracking-wide">
+                <h3 className="mt-4 font-comic text-xl tracking-wide text-ink">
                   {s.title}
                 </h3>
-                <p className="mt-2 font-medium leading-relaxed text-ink/75">
+                <p className="mt-1.5 text-sm font-medium leading-relaxed text-ink/70">
                   {s.body}
                 </p>
               </article>
             ))}
           </div>
+
+          <p className="mt-4 text-center text-sm font-bold uppercase tracking-wide text-ink/55">
+            …and you click the final submit. Every time.
+          </p>
         </section>
 
         {/* ------------------------------------------------ Utility belt */}
